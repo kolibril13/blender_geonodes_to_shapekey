@@ -64,10 +64,11 @@ license = [
 # clipboard = "Copy and paste bone transforms"
 
 # Optional: build settings.
-# https://docs.blender.org/manual/en/dev/advanced/extensions/command_line_arguments.html#command-line-args-extension-build
-# [build]
-# paths_exclude_pattern = [
-#   "__pycache__/",
-#   "/.git/",
-#   "/*.zip",
-# ]
+[build]
+paths_exclude_pattern = [
+	".gitignore",    # Exclude gitignore
+  "readme.md",     # Exclude readme
+  "LICENSE",       # Exclude license
+	"*.zip",         # Exclude *.zip
+	"*__pycache__/", # Exclude /__pycache__ folder
+]

@@ -268,8 +268,8 @@ class GEO_OT_RenameAndDelete(bpy.types.Operator):
 # ─── PROPS & REGISTER ─────────────────────────────────────────────────────────
 class GEO_Props(bpy.types.PropertyGroup):
     total_frames: IntProperty(
-        name="Frames",
-        description="Number of timed duplicates to make",
+        name="Time Samples",
+        description="How many samples to take from the animation (taken every 10 frames)",
         default=4,
         min=1,
     )

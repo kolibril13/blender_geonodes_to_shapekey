@@ -5,13 +5,13 @@ schema_version = "1.0.0"
 id = "geonode_to_shapekey"
 version = "1.0.0"
 name = "Geonode To Shapekey"
-tagline = "This is another extension"
+tagline = "Convert geometry nodes to shapekeys. E.g. useful for exporting to glTF."
 maintainer = "Jan-Hendrik Müller"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # Optional link to documentation, support, source files, etc
-# website = "https://extensions.blender.org/add-ons/my-example-package/"
+website = "https://github.com/kolibril13/blender_geonodes_to_shapekey/"
 
 # Optional list defined by Blender and server, see:
 # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
@@ -67,8 +67,9 @@ license = [
 [build]
 paths_exclude_pattern = [
 	".gitignore",    # Exclude gitignore
-  "readme.md",     # Exclude readme
+  "README.md",     # Exclude readme
   "LICENSE",       # Exclude license
 	"*.zip",         # Exclude *.zip
 	"*__pycache__/", # Exclude /__pycache__ folder
+  ".git/",         # Exclude /.git folder
 ]

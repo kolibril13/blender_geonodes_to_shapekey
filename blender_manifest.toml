@@ -3,9 +3,9 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "geonode_to_shapekey"
-version = "1.0.0"
+version = "1.1.0"
 name = "Geonode To Shapekey"
-tagline = "Convert geometry nodes to shapekeys. E.g. useful for exporting to glTF."
+tagline = "Convert geometry nodes to shapekeys. Useful for glTF export"
 maintainer = "Jan-Hendrik Müller"
 # Supported types: "add-on", "theme"
 type = "add-on"

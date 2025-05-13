@@ -37,7 +37,7 @@ class GEO_PT_GeoNodesToShapeKey(bpy.types.Panel):
         layout.separator()
         layout.operator("object.rename_and_delete", text="Rename and Delete")
 
-# ─── PREP OPERATOR ────────────────────────────────────────────────────────────
+# ─── PREP OPERATOR (No Operators Used) ─────────────────────────────────────────
 class GEO_OT_GeoNodesPrep(bpy.types.Operator):
     bl_idname = "object.geonodes_prep"
     bl_label = "Prepare GeoNodes Copies"
@@ -59,46 +59,34 @@ class GEO_OT_GeoNodesPrep(bpy.types.Operator):
             self.report({"ERROR"}, "Selected object has no Geometry Nodes modifier.")
             return {"CANCELLED"}
 
-        if context.mode != "OBJECT":
-            bpy.ops.object.mode_set(mode="OBJECT")
-
+        depsgraph = context.evaluated_depsgraph_get()
         original_active = context.view_layer.objects.active
-        
+
         for i in range(total):
             frame = i * 10
             scene.frame_set(frame)
-            
-            # Create a copy using the API instead of operators
-            copy = base_obj.copy()
-            copy.data = base_obj.data.copy()
-            copy.name = f"copy{i+1}"
-            copy.location.y += 2 * (i + 1)
-            
-            # Link the copy to the scene
-            scene.collection.objects.link(copy)
-            
-            # Set as active object
-            context.view_layer.objects.active = copy
-            
-            try:
-                # Still need to use operator for applying modifier
-                bpy.ops.object.modifier_apply(modifier=geo_mod.name)
-            except RuntimeError as e:
-                self.report(
-                    {"WARNING"}, f"Could not apply modifier on {copy.name}: {e}"
-                )
 
-        # Restore selection
-        for obj in context.selected_objects:
-            obj.select_set(False)
-            
+            # Evaluate the object with modifiers at current frame
+            eval_obj = base_obj.evaluated_get(depsgraph)
+            mesh = bpy.data.meshes.new_from_object(
+                object=eval_obj,
+                depsgraph=depsgraph,
+                preserve_all_data_layers=True
+            )
+            # Create a new object with the baked mesh
+            new_obj = bpy.data.objects.new(f"copy{i+1}", mesh)
+            new_obj.location = base_obj.location.copy()
+            new_obj.location.y += 2 * (i + 1)
+
+            # Link to scene
+            scene.collection.objects.link(new_obj)
+
+        # Restore original active object
         if original_active:
-            original_active.select_set(True)
             context.view_layer.objects.active = original_active
 
-        self.report({"INFO"}, f"Prepared {total} copies, each offset in Y.")
+        self.report({"INFO"}, f"Prepared {total} copies with evaluated meshes.")
         return {"FINISHED"}
-
 
 # ─── MERGE OPERATOR ───────────────────────────────────────────────────────────
 class GEO_OT_MergeToShapeKeys(bpy.types.Operator):

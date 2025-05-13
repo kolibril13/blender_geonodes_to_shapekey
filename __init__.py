@@ -17,7 +17,7 @@ from bpy.props import IntProperty, PointerProperty, BoolProperty
 
 # ─── PANEL ────────────────────────────────────────────────────────────────────
 class GEO_PT_GeoNodesToShapeKey(bpy.types.Panel):
-    bl_label = "GN to SKey"
+    bl_label = "GN to Shape Keys"
     bl_idname = "GEO_PT_geonodes_to_shapekey"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -32,7 +32,7 @@ class GEO_PT_GeoNodesToShapeKey(bpy.types.Panel):
 
         layout.operator("object.geonodes_prep", text="Prep Copies")
         layout.separator()
-        layout.operator("object.merge_to_shapekeys", text="Merge to ShapeKeys")
+        layout.operator("object.merge_to_shapekeys", text="Merge to Shape Keys")
         layout.prop(props, "use_relative")
         layout.separator()
         layout.operator("object.rename_and_delete", text="Rename and Delete")
@@ -91,9 +91,9 @@ class GEO_OT_GeoNodesPrep(bpy.types.Operator):
 # ─── MERGE OPERATOR ───────────────────────────────────────────────────────────
 class GEO_OT_MergeToShapeKeys(bpy.types.Operator):
     bl_idname = "object.merge_to_shapekeys"
-    bl_label = "Merge to ShapeKeys"
+    bl_label = "Merge to Shape Keys"
     bl_description = (
-        "On copy1: add Basis, join copy2…copyN as shape-keys, "
+        "On copy1: add Basis, join copy2…copyN as shape keys, "
         "disable relative mode, and keyframe eval_time"
     )
     bl_options = {"REGISTER", "UNDO"}

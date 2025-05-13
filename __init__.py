@@ -37,7 +37,6 @@ class GEO_PT_GeoNodesToShapeKey(bpy.types.Panel):
         layout.separator()
         layout.operator("object.rename_and_delete", text="Rename and Delete")
 
-
 # ─── PREP OPERATOR ────────────────────────────────────────────────────────────
 class GEO_OT_GeoNodesPrep(bpy.types.Operator):
     bl_idname = "object.geonodes_prep"
@@ -64,21 +63,25 @@ class GEO_OT_GeoNodesPrep(bpy.types.Operator):
             bpy.ops.object.mode_set(mode="OBJECT")
 
         original_active = context.view_layer.objects.active
-
+        
         for i in range(total):
             frame = i * 10
             scene.frame_set(frame)
-
-            bpy.ops.object.select_all(action="DESELECT")
-            base_obj.select_set(True)
-            context.view_layer.objects.active = base_obj
-
-            bpy.ops.object.duplicate()
-            copy = context.view_layer.objects.active
+            
+            # Create a copy using the API instead of operators
+            copy = base_obj.copy()
+            copy.data = base_obj.data.copy()
             copy.name = f"copy{i+1}"
             copy.location.y += 2 * (i + 1)
-
+            
+            # Link the copy to the scene
+            scene.collection.objects.link(copy)
+            
+            # Set as active object
+            context.view_layer.objects.active = copy
+            
             try:
+                # Still need to use operator for applying modifier
                 bpy.ops.object.modifier_apply(modifier=geo_mod.name)
             except RuntimeError as e:
                 self.report(
@@ -86,7 +89,9 @@ class GEO_OT_GeoNodesPrep(bpy.types.Operator):
                 )
 
         # Restore selection
-        bpy.ops.object.select_all(action="DESELECT")
+        for obj in context.selected_objects:
+            obj.select_set(False)
+            
         if original_active:
             original_active.select_set(True)
             context.view_layer.objects.active = original_active
